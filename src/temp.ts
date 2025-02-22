@@ -21,7 +21,7 @@ export const TWStyles = {
 	px: 'px-',
 	py: 'py-',
 	bd: 'border-',
-	bg: 'background-',
+	bg: 'bg-',
 	c: 'text-',
 	opacity: 'opacity-',
 	ff: 'font-',
