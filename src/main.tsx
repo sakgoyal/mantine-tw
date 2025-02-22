@@ -1,8 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import "./App.css";
-import { TWStyles } from "./temp";
-import type { Entries } from "type-fest";
+import { type MantineProps } from "./temp";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -14,41 +13,67 @@ function App() {
   return (
     <>
       <h1 className="text-3xl font-bold">Hello world!</h1>
-      <ButtonM pt={5} c={"sky-50"} border-solid={true} bg={"blue"} rounded={"lg"} />
+      <ButtonM />
     </>
   );
 }
-type Props = Partial<Record<keyof typeof TWStyles, any>>;
+type Props = Partial<Record<MantineProps, any>>;
 
 
 function ButtonM(props: Props) {
+  const actualProps = {
+    rounded: "md",
+    bg: "blue-500",
+    px: 4,
+    py: 2,
+    text: "white",
+    font: "semibold",
+    hover: {
+      bg: "blue-600"
+    },
+    dark: {
+      bg: "blue-600",
+      hover: {
+        bg: "blue-700",
+        underline: true
+      },
+
+    },
+    ...props,
+  } as const satisfies Props;
   return (
-    <button className={ConvertProps(props)}>
+    <button className={ConvertProps(actualProps)}>
       Testing Button
     </button>
   );
 }
 
-
-
-export function ConvertProps(props: Props) {
-  let converted = "";
-
-  for (const [key, val] of Object.entries(props) as Entries<typeof props>) {
-    const temp =  TWStyles[key] ?? `${key}-`;
-
-    // if (typeof val === 'string' && ending(val)) converted += `${temp}[${val}] `;
-    if (typeof val === "boolean") {
-      if (val === true) converted += `${key} `;
-    } else converted += `${temp}${val} `;
-  }
-  return converted;
+export function ConvertProps(props: Props, prefix = ""): string {
+  return Object.entries(props)
+    .flatMap(([key, value]) => {
+      const cls = prefix ? `${prefix}:${key}` : key;
+      if (typeof value === 'string' || typeof value === 'number') return `${cls}-${value}`
+      if (typeof value === 'boolean') return value ? cls : ''
+      if (typeof value === 'object' && value !== null) return ConvertProps(value, cls)
+      return ''
+    })
+    .join(' ')
 }
 
-// function ending(foo: string) {
-//   // check if foo ends with any of the unit endings
-//   for (const unit of units) {
-//     if (foo.endsWith(unit)) return true;
-//   }
-//   return false;
-// }
+function transforms() {
+  // specific mantine conversions to tailwind
+
+  // color conversions
+  // bright color c="bright" translates to "text-white dark:text-black"
+  // dimmed color c="dimmed" translates to "text-gray-700 dark:text-dark-[#828282]"
+  // white color c="white" translates to "text-white"
+  // black color c="black" translates to "text-black"
+
+
+}
+
+
+// if variant prop is defined, use different defaults
+function variants() {
+
+}
