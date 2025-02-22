@@ -14,7 +14,7 @@ function App() {
   return (
     <>
       <h1 className="text-3xl font-bold">Hello world!</h1>
-      <ButtonM underline={true} pt={5} font={"mono"} c={"blue-500"} border-solid={true} bg={"black"} />
+      <ButtonM pt={5} c={"sky-50"} border-solid={true} bg={"blue"} rounded={"lg"} />
     </>
   );
 }
